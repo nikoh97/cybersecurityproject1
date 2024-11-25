@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <form action="/" method="GET">
+        {% csrf_token %}
+        <input type="submit" value="Takaisin" />
+    </form>
+    <h2>Varaus onnistui</h2>
+    <span>Tapahtuma: </span>
+    <span>{{tapahtuma.nimi}}</span>
+</body>
+
+</html>

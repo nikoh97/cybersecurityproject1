@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <h2>Käyttäjä</h2>
+    <p>Käyttäjänimi: {{kayttaja}}</p>
+
+    <form action='/varaukset' method="GET">
+        {% csrf_token %}
+        <input type="submit" value="Omat varaukset" />
+    </form>
+
+    <h2>Tapahtumat</h2>
+
+    {% if tapahtumat %}
+    {% for tapahtuma in tapahtumat %}
+    <div>
+        <p>{{tapahtuma.tapahtuma.nimi}}</p>
+        <p>Paikkoja: {{tapahtuma.varatut}} / {{tapahtuma.tapahtuma.paikka_maara}}</p>
+        <span>Kotisivut:</span>
+        <a href="{{tapahtuma.tapahtuma.kotisivu}}">{{tapahtuma.tapahtuma.kotisivu}}</a>
+        <form action='ilmoittaudu/' method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Ilmoittaudu" />
+            <input type="hidden" name="id" value="{{tapahtuma.tapahtuma.tapahtuma_id}}"></input>
+        </form>
+        <form action='peru/' method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Peru" />
+            <input type="hidden" name="id" value="{{tapahtuma.tapahtuma.tapahtuma_id}}"></input>
+        </form>
+        <hr>
+    </div>
+    {% endfor %}
+
+    {% else %}
+    <p>Ei tapahtumia</p>
+    {% endif %}
+
+    <form action='logout/' method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Logout" />
+    </form>
+
+</body>
+
+</html>

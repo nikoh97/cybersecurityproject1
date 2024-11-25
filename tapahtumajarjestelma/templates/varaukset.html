@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <form action="/" method="GET">
+        {% csrf_token %}
+        <input type="submit" value="Takaisin" />
+    </form>
+
+    <h2>Käyttäjä</h2>
+    <p>Käyttäjänimi: {{kayttaja.nimi}}</p>
+    <p>Email: {{kayttaja.email}}</p>
+
+    <h2>Omat varaukset</h2>
+
+    {% if varaukset %}
+    {% for varaus in varaukset %}
+    <div>
+        <p>Tapahtuma: {{varaus.nimi}}</p>
+        <p>Varattu: {{varaus.date}}</p>
+        <hr>
+    </div>
+
+    {% endfor %}
+
+    {% else %}
+    <p>Ei varauksia</p>
+    {% endif %}
+
+</body>
+
+</html>
