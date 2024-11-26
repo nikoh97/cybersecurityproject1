@@ -1,8 +1,15 @@
 <h2>Login</h2>
-<form method="POST">
+<form action="/login/" method="POST">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
 
-  <button onclick="location.href = '/signup'">Create account</button>
+  <p>Käyttäjänimi: </p>
+  <input type="text" name="kayttajanimi"/>
+  <p>Salasana: </p>
+  <input type="text" name="salasana"/>
+</br>
+  <button type="submit">Login</button>
+</form>
+<form action="/signup/" method="POST">
+  <button type="submit">Register</button>
+
 </form>

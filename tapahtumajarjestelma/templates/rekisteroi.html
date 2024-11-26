@@ -7,15 +7,19 @@
 </head>
 
 <body>
+  <form action="/" method="GET">
+    {% csrf_token %}
+    <input type="submit" value="Takaisin" />
+</form>
   <h2>Uusi käyttäjä</h2>
 
   <form method="POST">
     {% csrf_token %}
     <span>Email:</span><br />
     <input type="text" name="email" /><br />
-    <span>Username:</span><br />
+    <span>Käyttäjänimi:</span><br />
     <input type="text" name="username" /><br />
-    <span>Password:</span><br />
+    <span>Salasana:</span><br />
     <input type="text" name="password" /><br />
     <input type="submit" />
   </form>

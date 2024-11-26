@@ -23,9 +23,9 @@ LOGIN_REDIRECT_URL = '/'
 
 SECRET_KEY = 'b9()16vmglljtlsvpjrrn@+imqi!*@#m(5g8-nv=*9dsct8(7f'
 
-# Flaw: Security Misconfiguration
+# Flaw Security Misconfiguration
 DEBUG = True
-# Fix:
+# Fix
 # DEBUG = False
 #ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -45,8 +45,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # Flaw: CSRF
-    # Fix:
+    # Flaw CSRF
+    # Fix
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

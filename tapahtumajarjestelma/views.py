@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .models import Account, Tapahtuma, Varaus
+from django.contrib.auth import authenticate, login, logout
 
 
 def tarkistaSalasana(salasana):
@@ -24,8 +25,8 @@ def teeKayttaja(request):
     salasana = request.POST.get('password', None)
     email = request.POST.get('email', None)
 
-    # Flaw: Identification and Authentication Failures
-    # Fix:
+    # Flaw Identification and Authentication Failures
+    # Fix
     # if not tarkistaSalasana(salasana):
     #     return None
 
@@ -35,7 +36,7 @@ def teeKayttaja(request):
             user = User.objects.create_user(username=kayttajanimi,
                                             email=email,
                                             password=salasana)
-            kayttaja = Account.objects.create(user=user, balance=1000)
+            kayttaja = Account.objects.create(user=user)
             return kayttaja
         else:
             kayttaja = Account.objects.filter(user=user).first()
@@ -61,11 +62,11 @@ def validoi_url(ks_url):
 
 
 def verifioi_tapahtuma_url(url):
-    # Flaw: SSRF
+    # Flaw SSRF
     res = requests.get(url)
     valid_url = res.status_code == 200
     return valid_url
-    # Fix:
+    # Fix
     # valid_url = validoi_url(url)
     # if valid_url:
     #     res = requests.get(url, timeout=5)
@@ -75,8 +76,8 @@ def verifioi_tapahtuma_url(url):
 @login_required
 # @csrf_protect
 def uusitapahtumaView(request):
-    # Flaw: Broken Access Control
-    # Fix:
+    # Flaw Broken Access Control
+    # Fix
     # user = request.user
     # kayttaja = Account.objects.filter().first()
     # if not user.is_superuser or not kayttaja.organizer:
@@ -96,6 +97,9 @@ def uusitapahtumaView(request):
                 nimi=nimi, paikka_maara=paikka_maara, kotisivu=kotisivu)
     return render(request, 'uusitapahtuma.html')
 
+def logoutView(request):
+    logout(request)
+    return redirect("/")
 
 # @csrf_protect
 def signupView(request):
@@ -105,6 +109,17 @@ def signupView(request):
             return redirect('/login')
     return render(request, 'rekisteroi.html')
 
+# @csrf_protect
+def loginView(request):
+    if request.method == 'POST':
+        kayttajanimi = request.POST.get('kayttajanimi', None)
+        salasana = request.POST.get('salasana', None)
+        user = authenticate(
+            username=kayttajanimi, password=salasana)
+        if user:
+            login(request, user)
+            return redirect('/')
+    return render(request, 'kirjaudu.html')
 
 @login_required
 # @csrf_protect
