@@ -1,3 +1,4 @@
+import requests
 import socket
 import ipaddress
 from urllib.parse import urlparse
@@ -51,17 +52,34 @@ def validoi_url(ks_url):
         ip = socket.gethostbyname(url.hostname)
         if ipaddress.ip_address(ip).is_private:
             return False
+        allowed_domains = ["wordpress.com", "wix.com", "squarespace.com"]
+        if url.hostname not in allowed_domains:
+            return False
     except Exception:
         return False
     return True
 
 
+def verifioi_tapahtuma_url(url):
+    # Flaw: SSRF
+    res = requests.get(url)
+    valid_url = res.status_code == 200
+    return valid_url
+    # Fix:
+    # valid_url = validoi_url(url)
+    # if valid_url:
+    #     res = requests.get(url, timeout=5)
+    #     return res.status_code == 200
+
+
 @login_required
+# @csrf_protect
 def uusitapahtumaView(request):
-    user = request.user
     # Flaw: Broken Access Control
     # Fix:
-    # if not user.is_superuser:
+    # user = request.user
+    # kayttaja = Account.objects.filter().first()
+    # if not user.is_superuser or not kayttaja.organizer:
     #     return redirect('/')
 
     if request.method == 'POST':
@@ -69,10 +87,9 @@ def uusitapahtumaView(request):
         paikka_maara = request.POST.get('paikka_maara', None)
         kotisivu = request.POST.get('kotisivu', None)
 
-        valid_url = True
-        # Flaw: SSRF
-        # Fix:
-        # valid_url = validoi_url(kotisivu)
+        verified = verifioi_tapahtuma_url(kotisivu)
+        if not verified:
+            kotisivu = ""
 
         if nimi and paikka_maara and valid_url:
             Tapahtuma.objects.create(
@@ -80,6 +97,7 @@ def uusitapahtumaView(request):
     return render(request, 'uusitapahtuma.html')
 
 
+# @csrf_protect
 def signupView(request):
     if request.method == 'POST':
         acc = teeKayttaja(request)
@@ -89,6 +107,7 @@ def signupView(request):
 
 
 @login_required
+# @csrf_protect
 def ilmoittauduView(request):
     if request.method == 'POST':
         tapahtuma_id = request.POST.get('id')
@@ -99,6 +118,7 @@ def ilmoittauduView(request):
 
 
 @login_required
+# @csrf_protect
 def peruView(request):
     if request.method == 'POST':
         tapahtuma_id = request.POST.get('id')

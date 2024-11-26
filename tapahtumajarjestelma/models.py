@@ -6,7 +6,7 @@ import uuid
 
 class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    balance = models.IntegerField()
+    organizer = models.BooleanField(default=False)
 
 
 class Tapahtuma(models.Model):
